@@ -44,17 +44,11 @@ OrderEase is a versatile solution designed to streamline the order management pr
 
 5. Access the OrderEase web application in your browser at `[http://localhost:3000](https://localhost:7062/)`.
 
-## Customization
-
-You can further enhance OrderEase by customizing it to meet your specific business requirements. Feel free to add more fields or features to make the order management process even more comprehensive and efficient.
 
 ## Contributions
 
 Contributions are welcome! If you have ideas for improvements or new features, please create a pull request or open an issue in the GitHub repository.
 
-## License
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
 ## Acknowledgments
 ---
