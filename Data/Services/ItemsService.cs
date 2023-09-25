@@ -59,7 +59,7 @@ namespace OrderEase.Data.Services
 
         public bool ItemExists(int ItemID)
         {
-            throw new NotImplementedException();
+            return _context.Items.Any(item => item.ItemID == ItemID);
         }
     }
 }

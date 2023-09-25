@@ -4,7 +4,7 @@ namespace OrderEase.Data.Services
 {
     public interface IOrdersService
     {
-        Order GetOrderByID(int OrderID);
+        Order GetOrderByID(int? OrderID);
         IEnumerable<Order> GetAllOrders();
         void CreateOrder (Order order);
         void UpdateOrder (Order order);

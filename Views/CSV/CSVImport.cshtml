@@ -1,41 +1,24 @@
 ﻿@model IEnumerable<OrderEase.Models.Order>
+  
 
 @{
-    ViewData["Title"] = "Orders";
+    ViewData["Title"] = "CSV Import";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="container">
-    <h1>Orders</h1>
+<h2>@ViewData["Title"]</h2>
 
-    <form asp-action="Index" method="post">
-        <div class="form-horizontal">
-            <div class="row">
-                <div class="col-md-3">
-                    <div class="form-group">
-                        <label class="control-label">Filter By:</label>
-                        @Html.DropDownList("filterBy", new SelectList(new List<string>
-                        {
-                        "OrderID", "Order Date", "Delivery Date", "Supplier"
-                        }), "Select Filter", new { @class = "form-control" })
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="form-group">
-                        <label class="control-label">Filter Text:</label>
-                        <input type="text" id="filterText" name="filterText" class="form-control" placeholder="Enter filter text">
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="form-group">
-                        <button type="submit" class="btn btn-primary btn-block">Filter</button>
-                        <button type="button" class="btn btn-secondary btn-block" id="clearFilter">Clear</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </form>
+<form method="post" enctype="multipart/form-data">
+    <div class="form-group">
+        <label for="file">Select a CSV File (Accepted fromat: .csv): </label>
+        <input type="file" name="file" id="file" accept=".csv" required/>
+    </div>
+    <button type="submit" class="btn btn-primary">Upload</button>
+</form>
 
+@if (Model != null && Model.Any())
+{
+    <h2>CSV Preview</h2>
     <table class="table table-striped table-bordered">
         <thead>
             <tr>
@@ -60,7 +43,6 @@
                 <th>
                     @Html.DisplayNameFor(model => model.OrderStatus)
                 </th>
-                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -88,16 +70,10 @@
                     <td>
                         @Html.DisplayFor(modelItem => order.OrderStatus)
                     </td>
-                    <td>
-                        <a asp-action="Edit" asp-route-id="@order.OrderID" class="btn btn-info">Edit</a>
-                        <a asp-action="Details" asp-route-id="@order.OrderID" class="btn btn-info">Details</a>
-                        <a asp-action="Delete" asp-route-id="@order.OrderID" class="btn btn-danger">Delete</a>
-                    </td>
                 </tr>
             }
         </tbody>
     </table>
-</div>
-<p>
-    <a asp-action="Create" class="btn btn-success">Create New</a>
-</p>
+
+}
+

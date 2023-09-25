@@ -16,3 +16,39 @@ html {
 body {
   margin-bottom: 60px;
 }
+/* Target the "Filter By" dropdown */
+.form-group select[name="filterBy"] {
+    width: 100%;
+    margin: 0;
+    padding: 10px;
+    vertical-align: middle;
+}
+
+/* Target the "Filter Text" input */
+.form-group input[name="filterText"] {
+    width: 100%;
+    margin: 0;
+    padding: 10px;
+    vertical-align: middle;
+}
+
+/* Target the filter and clear buttons */
+.form-group button[type="submit"],
+.form-group button#clearFilter {
+    /* Adjust the styles as needed */
+    margin: 0;
+    padding: 10px;
+    vertical-align: middle;
+}
+
+/* margin-top to vertically align the buttons with other controls */
+.form-group button[type="submit"],
+.form-group button#clearFilter {
+    margin-bottom: 20px; 
+}
+
+
+/* Add margin-bottom to create vertical spacing between form groups */
+.form-group {
+    margin-bottom: 20px;
+}

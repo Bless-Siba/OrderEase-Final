@@ -4,8 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OrderEase.Data.Services;
 using OrderEase.Models;
-
-
+using SQLitePCL;
 
 namespace OrderEase.Controllers
 {
@@ -50,14 +49,14 @@ namespace OrderEase.Controllers
         // POST: Orders/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create([Bind("OrderID,Quantity,TotalPrice,OrderDate,DeliveryDate,Supplier,OrderStatus")] Order order)
+        public IActionResult Create([Bind("Quantity,TotalPrice,OrderDate,DeliveryDate,Supplier,OrderStatus")] Order order)
         {
             if (ModelState.IsValid)
             {
-                _ordersService.CreateOrder(order);
-                return RedirectToAction(nameof(Index));
+                return View(order);
             }
-            return View(order);
+            _ordersService.CreateOrder(order);
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Orders/Edit/5
@@ -80,7 +79,7 @@ namespace OrderEase.Controllers
         // POST: Orders/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, [Bind("OrderID,Quantity,TotalPrice,OrderDate,DeliveryDate,Supplier,OrderStatus")] Order order)
+        public ActionResult Edit(int id, [Bind("Quantity,TotalPrice,OrderDate,DeliveryDate,Supplier,OrderStatus")] Order order)
         {
             if (id != order.OrderID)
             {
@@ -95,14 +94,7 @@ namespace OrderEase.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!_ordersService.OrderExists(order.OrderID))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                  ModelState.AddModelError("", "Unable to save changes. " + "Try again, and if the problem persists, " + "see your system administrator");
                 }
                 return RedirectToAction(nameof(Index));
             }
@@ -136,13 +128,45 @@ namespace OrderEase.Controllers
             {
                 return Problem("Entity set 'OrderDbContext.Orders'  is null.");
             }
-            _ordersService?.DeleteOrder(id);
+            _ordersService.DeleteOrder(id);
             return RedirectToAction(nameof(Index));
         }
 
         private bool OrderExists(int id)
         {
-            return _ordersService.OrderExists(id);
+            return (_ordersService.OrderExists(id));
+        }
+
+        //POST: Orders/Filter/5
+        //Using LINQ to filter Orders
+        [HttpPost]
+        public IActionResult FilterOrders (int OrderID,DateTime? startDate, DateTime? endDate, string Supplier)
+        {
+            var filteredOrders = _ordersService.GetAllOrders();
+
+            if (OrderID!= 0)
+            {
+                filteredOrders = filteredOrders.Where (o=>o.OrderID==OrderID);
+            }
+
+            if (startDate.HasValue)
+            {
+                filteredOrders = filteredOrders.Where(o =>o.OrderDate>=startDate.Value);  
+            }
+
+            if (endDate.HasValue)
+            {
+                filteredOrders = filteredOrders.Where(o => o.OrderDate <= endDate.Value);
+            }
+
+            if(!string.IsNullOrWhiteSpace(Supplier))
+            {
+                filteredOrders = filteredOrders.Where((o)=>o.Supplier==Supplier);
+            }
+
+            var filteredOrdersList = filteredOrders.ToList();
+            return View("Index", filteredOrdersList);
+
         }
 
         //GET: Orders/ExportPDF/5

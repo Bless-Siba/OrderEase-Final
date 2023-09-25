@@ -11,10 +11,9 @@ namespace OrderEase.Data.Services
             _context = context;
         }
 
-        public Order GetOrderByID(int OrderID)
+        public Order GetOrderByID(int? OrderID)
         {
-            var ordersService = new OrdersService(_context);
-            var order = ordersService.GetOrderByID(OrderID);
+            var order = _context.Orders.Find(OrderID);
 
             if (order == null)
             {
@@ -30,10 +29,6 @@ namespace OrderEase.Data.Services
 
         public void CreateOrder(Order order)
         {
-            if (order == null)
-            {
-                throw new ArgumentNullException(nameof(order));
-            }
             _context.Orders.Add(order);
             _context.SaveChanges();
         }
@@ -61,7 +56,5 @@ namespace OrderEase.Data.Services
         {
             return _context.Orders.Any(o => o.OrderID == OrderID);
         }
-
-
     }
 }

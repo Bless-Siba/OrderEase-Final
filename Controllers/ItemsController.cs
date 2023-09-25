@@ -50,27 +50,26 @@ namespace OrderEase.Controllers
         // GET: Items/Create
         public IActionResult Create()
         {
-            var Orders = _ordersService.GetAllOrders();
-            var orderIDList = new SelectList(Orders, "OrderID", "OrderID");
-            var item = new Item
+            var itemsWithOrders = _ordersService.GetAllOrders();
+            var orderIDs = itemsWithOrders.Select(item => new
             {
-                OrderIDList = orderIDList
-            };
-
-            return View(item);
+                OrderID = item.OrderID,
+            }).ToList();
+            ViewBag.OrderIDList = new SelectList(orderIDs, "OrderID");
+            return View();
         }
 
         // POST: Items/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create([Bind("ItemID,ItemName,Price,QuantityInStock,OrderID")] Item item)
+        public IActionResult Create([Bind("ItemName,Price,QuantityInStock")] Item item)
         {
             if (ModelState.IsValid)
             {
-                _itemsService.CreateItem(item);
-                return RedirectToAction(nameof(Index));
+                return View(item);
             }
-            return View(item);
+            _itemsService.CreateItem(item);
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Items/Edit/5
@@ -89,7 +88,7 @@ namespace OrderEase.Controllers
             }
 
             var Orders = _ordersService.GetAllOrders();
-            var orderIDList = new SelectList(Orders, "OrderID", "OrderID");
+            var orderIDList = new SelectList(Orders, "OrderID");
             {
                 OrderIDList = orderIDList;
             };
@@ -101,7 +100,7 @@ namespace OrderEase.Controllers
         // POST: Items/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, [Bind("ItemID,ItemName,Price,QuantityInStock,OrderID")] Item item)
+        public IActionResult Edit(int? id, [Bind("ItemName,Price,QuantityInStock,OrderID")] Item item)
         {
             if (id != item.ItemID)
             {

@@ -6,6 +6,7 @@ namespace OrderEase.Data.Services
     {
 
         public IEnumerable<Order> ReadCSV<Order>(Stream file);
-        void ProcessOrder (Order order); 
+        void ProcessOrder (Order order);
+        void ImportOrdersFromCSV(Stream stream);
     }
 }

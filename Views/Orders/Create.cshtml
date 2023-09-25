@@ -12,12 +12,6 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
             <div class="form-group">
-                <label asp-for="OrderID" class="control-label">Order ID</label>
-                <input asp-for="OrderID" class="form-control" />
-                <span asp-validation-for="OrderID" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
                 <label asp-for="Quantity" class="control-label">Quantity</label>
                 <input asp-for="Quantity" class="form-control" />
                 <span asp-validation-for="Quantity" class="text-danger"></span>
@@ -52,6 +46,7 @@
                 <select asp-for="OrderStatus" class="form-control">
                     <option value="Shipped">Shipped</option>
                     <option value="Pending">Pending</option>
+                    <option value="Delivered">Delivered</option>
                     <option value="Cancelled">Cancelled</option>
                 </select>
                 <span asp-validation-for="OrderStatus" class="text-danger"></span>
@@ -59,7 +54,7 @@
 
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" style="margin-top: 10px" />
-                <a asp-action="Index" class="btn btn-secondary" style="margin-top: 10px">Back to List</a>
+                <a asp-action="Index" class="btn btn-secondary" style="margin-top: 10px">Show  All</a>
             </div>
         </form>
     </div>

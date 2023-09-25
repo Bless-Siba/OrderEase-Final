@@ -20,7 +20,7 @@ namespace OrderEase.Data.Services
             _context.SaveChanges();
         }
 
-        public void ImportOrdersFromCVS(Stream csvStream)
+        public void ImportOrdersFromCSV(Stream csvStream)
         {
             var config = new CsvConfiguration(CultureInfo.InvariantCulture)
             {

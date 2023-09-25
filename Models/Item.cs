@@ -23,17 +23,6 @@ namespace OrderEase.Models
         //One-to-Many Relationship with Order
         [Display(Name ="Order ID")]
         public int OrderID { get; set; } //Foreign Key referecing Order
-        public virtual Order Order { get; set; }
-
-        //ViewModel-related properties
-        [NotMapped]
-        [ForeignKey("SelectedOrderID")]
-        public int SelectedOrderID { get; set; }
-
-        [NotMapped]
-        [Display(Name = "Order ID List")]
-        public SelectList OrderIDList { get; set; }
-
-
+        public Order Order { get; set; }
     }
 }

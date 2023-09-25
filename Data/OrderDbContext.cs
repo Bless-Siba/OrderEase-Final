@@ -43,7 +43,8 @@ namespace OrderEase.Data
             //One-to-Many Relationship
             modelBuilder.Entity<Order>()
                 .HasMany(o => o.Items)
-                .WithOne(i => i.Order).HasForeignKey(i => i.OrderID);
+                .WithOne(i => i.Order).HasForeignKey(i => i.OrderID)
+                .OnDelete(DeleteBehavior.Cascade);
 
             //Item Configuration
             modelBuilder.Entity<Item>()
@@ -63,11 +64,6 @@ namespace OrderEase.Data
                 .Property(i => i.QuantityInStock)
                 .IsRequired();
 
-            //Relationship
-            modelBuilder.Entity<Item>()
-                .HasOne(i => i.Order)
-                .WithMany(o => o.Items)
-                .HasForeignKey(i => i.OrderID);
 
             base.OnModelCreating(modelBuilder);
         }

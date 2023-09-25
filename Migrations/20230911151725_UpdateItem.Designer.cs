@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OrderEase.Data;
 
@@ -11,9 +12,11 @@ using OrderEase.Data;
 namespace OrderEase.Migrations
 {
     [DbContext(typeof(OrderDbContext))]
-    partial class OrderDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230911151725_UpdateItem")]
+    partial class UpdateItem
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -38,6 +41,9 @@ namespace OrderEase.Migrations
                     b.Property<int>("OrderID")
                         .HasColumnType("int");
 
+                    b.Property<int?>("OrderID1")
+                        .HasColumnType("int");
+
                     b.Property<decimal>("Price")
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
@@ -48,6 +54,10 @@ namespace OrderEase.Migrations
                     b.HasKey("ItemID");
 
                     b.HasIndex("OrderID");
+
+                    b.HasIndex("OrderID1")
+                        .IsUnique()
+                        .HasFilter("[OrderID1] IS NOT NULL");
 
                     b.ToTable("Items");
                 });
@@ -94,11 +104,18 @@ namespace OrderEase.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("OrderEase.Models.Order", null)
+                        .WithOne("Item")
+                        .HasForeignKey("OrderEase.Models.Item", "OrderID1");
+
                     b.Navigation("Order");
                 });
 
             modelBuilder.Entity("OrderEase.Models.Order", b =>
                 {
+                    b.Navigation("Item")
+                        .IsRequired();
+
                     b.Navigation("Items");
                 });
 #pragma warning restore 612, 618

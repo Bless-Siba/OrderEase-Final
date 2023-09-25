@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using OrderEase.Data.Services;
 using OrderEase.Models;
-using System.Linq.Expressions;
+
 
 namespace OrderEase.Controllers
 {
@@ -18,14 +17,15 @@ namespace OrderEase.Controllers
         }
 
         //GET: CSV Import
-        public IActionResult CSVImpport()
+        [HttpGet("CSVImport")]
+        public IActionResult CSVImport()
         {
-            return View();
+            return View("CSVImport");
         }
 
-        //POST: CSV Import
-        [HttpPost("upload-csv")]
-        public IActionResult UploadCSV(IFormFile file)
+        //POST: Orders/CSV Import/5
+        [HttpPost("CSVImport")]
+        public IActionResult CSVImport(IFormFile file)
         {
             if (file != null && file.Length>0)
             {
@@ -33,12 +33,7 @@ namespace OrderEase.Controllers
                 {
                     using (var stream = file.OpenReadStream())
                     {
-                        var orders = _csvService.ReadCSV<Order>(stream);
-
-                      if (orders.Any())
-                        {
-                            return View("CSVPreview", orders); //Render the preview view when there are orders to display. 
-                        }
+                      _csvService.ImportOrdersFromCSV(stream);
                         TempData["SuccessMessage"] = "CSV Import was successful.";
                     }
                 }
@@ -52,7 +47,7 @@ namespace OrderEase.Controllers
             {
                 ModelState.AddModelError("", "Please select a CSV file to import.");
             }
-            return RedirectToAction("CSVImport"); //Return to the CVSImport page (GET) after processing the file. 
+            return View("CSVImport");
         } 
     }
 }

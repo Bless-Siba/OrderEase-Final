@@ -1,11 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using OrderEase.Data.Enums;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OrderEase.Models
 {
     public class Order
     {
+        [Key]   
         [Display(Name ="Order ID")]
         public int OrderID { get; set; }
 
@@ -27,9 +29,6 @@ namespace OrderEase.Models
         public OrderStatus OrderStatus { get; set; } 
 
         public ICollection<Item> Items { get; set; }
-
-        //Navigation property to Item
-        public virtual Item Item { get; set; }
         
     }
 }
