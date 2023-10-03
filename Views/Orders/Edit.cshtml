@@ -13,6 +13,7 @@
     <div class="col-md-4">
         <form asp-action="Edit">
             <div class="form-group">
+                <input type="hidden" asp-for="OrderID" value="@Model.OrderID" />
                 <label asp-for="Quantity" class="control-label"></label>
                 <input asp-for="Quantity" class="form-control" />
                 <span asp-validation-for="Quantity" class="text-danger"></span>

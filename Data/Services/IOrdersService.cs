@@ -10,5 +10,6 @@ namespace OrderEase.Data.Services
         void UpdateOrder (Order order);
         void DeleteOrder (int OrderID);
         bool OrderExists(int orderID);
+        Task SaveChangesAsync();
     }
 }

@@ -4,7 +4,7 @@
     {
         Pending,
         Shipped,
-        Deivered,
+        Delivered,
         Cancelled
     }
 }

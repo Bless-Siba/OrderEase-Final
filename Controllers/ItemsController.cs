@@ -53,7 +53,7 @@ namespace OrderEase.Controllers
             var itemsWithOrders = _ordersService.GetAllOrders();
             var orderIDs = itemsWithOrders.Select(item => new
             {
-                OrderID = item.OrderID,
+                item.OrderID,
             }).ToList();
             ViewBag.OrderIDList = new SelectList(orderIDs, "OrderID");
             return View();
@@ -62,14 +62,29 @@ namespace OrderEase.Controllers
         // POST: Items/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create([Bind("ItemName,Price,QuantityInStock")] Item item)
+        public IActionResult Create([Bind("ItemName,Price,QuantityInStock,OrderID")] Item item)
         {
             if (ModelState.IsValid)
             {
-                return View(item);
+                _itemsService.CreateItem(item);
+                return RedirectToAction(nameof(Index));
             }
-            _itemsService.CreateItem(item);
-            return RedirectToAction(nameof(Index));
+
+            var itemsWithOrders = _ordersService.GetAllOrders();
+            var orderIDs = itemsWithOrders.Select(item => new
+            {
+                OrderID = item.OrderID,
+            }).ToList();
+
+            if (orderIDs.Any())
+            {
+                ViewBag.OrderIDList = new SelectList(orderIDs, "OrderID", "Order", item.OrderID);
+            }
+            else
+            {
+                ViewBag.OrderIDList = null;
+            }
+            return View(item);
         }
 
         // GET: Items/Edit/5
@@ -88,7 +103,7 @@ namespace OrderEase.Controllers
             }
 
             var Orders = _ordersService.GetAllOrders();
-            var orderIDList = new SelectList(Orders, "OrderID");
+            var orderIDList = new SelectList(Orders, "OrderID", "OrderID");
             {
                 OrderIDList = orderIDList;
             };
@@ -100,7 +115,7 @@ namespace OrderEase.Controllers
         // POST: Items/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int? id, [Bind("ItemName,Price,QuantityInStock,OrderID")] Item item)
+        public IActionResult Edit(int? id, [Bind("ItemID,ItemName,Price,QuantityInStock,OrderID")] Item item)
         {
             if (id != item.ItemID)
             {

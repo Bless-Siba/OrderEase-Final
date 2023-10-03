@@ -8,11 +8,14 @@
 
 <h2>@ViewData["Title"]</h2>
 
-<form method="post" enctype="multipart/form-data">
+<form method="post" enctype="multipart/form-data" asp-controller="CSV" asp-action="CSVImport">
     <div class="form-group">
         <label for="file">Select a CSV File (Accepted fromat: .csv): </label>
         <input type="file" name="file" id="file" accept=".csv" required/>
     </div>
+
+    @* Display validation summary at the top of the form *@
+    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
     <button type="submit" class="btn btn-primary">Upload</button>
 </form>
 

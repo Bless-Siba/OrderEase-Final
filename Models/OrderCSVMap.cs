@@ -1,4 +1,5 @@
 ﻿using CsvHelper.Configuration;
+using CsvHelper.TypeConversion;
 
 namespace OrderEase.Models
 {
@@ -6,13 +7,12 @@ namespace OrderEase.Models
     {
         public OrderCSVMap()
         {
-            Map(m => m.OrderID).Name("Order ID");
-            Map(m => m.Quantity).Name("Quantity");
-            Map(m => m.TotalPrice).Name("Total Price");
-            Map(m => m.OrderDate).Name("Order Date");
-            Map(m => m.DeliveryDate).Name("Delivery Date");
+            Map(m => m.Quantity).Name("Quantity").TypeConverter<Int32Converter>();
+            Map(m => m.TotalPrice).Name("TotalPrice");
+            Map(m => m.OrderDate).Name("OrderDate");
+            Map(m => m.DeliveryDate).Name("DeliveryDate");
             Map(m => m.Supplier).Name("Supplier");
-            Map(m => m.OrderStatus).Name("Order Status");
+            Map(m => m.OrderStatus).Name("OrderStatus");
         }
     }
 }

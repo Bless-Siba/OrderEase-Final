@@ -11,7 +11,7 @@ namespace OrderEase.Data.Services
             _context = context;
         }
 
-        public Item GetItemByID(int ItemID)
+        public Item GetItemByID(int? ItemID)
         {
             var item = _context.Items.Find(ItemID);
 
@@ -60,6 +60,28 @@ namespace OrderEase.Data.Services
         public bool ItemExists(int ItemID)
         {
             return _context.Items.Any(item => item.ItemID == ItemID);
+        }
+
+
+        public ICollection<Item> GetItemsForOrder(int? id)
+        {
+            if (id == null)
+            {
+                throw new NotImplementedException();
+            }
+
+            //Retrieve items associated with the order using LINQ
+            var items = _context.Items
+            .Where(item => item.OrderID == id)
+            .ToList();
+            
+            return items;
+        }
+
+        public Item? GetItemByID(int ItemID)
+        {
+            var item = _context.Items.FirstOrDefault(i => i.ItemID == ItemID);
+            return item;
         }
     }
 }

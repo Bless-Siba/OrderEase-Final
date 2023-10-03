@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.EntityFrameworkCore;
 using OrderEase.Models;
 
 namespace OrderEase.Data.Services
@@ -55,6 +56,11 @@ namespace OrderEase.Data.Services
         public bool OrderExists(int OrderID)
         {
             return _context.Orders.Any(o => o.OrderID == OrderID);
+        }
+
+        public async Task SaveChangesAsync()
+        {
+          await _context.SaveChangesAsync();
         }
     }
 }

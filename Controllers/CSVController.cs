@@ -31,10 +31,19 @@ namespace OrderEase.Controllers
             {
                 try
                 {
+                    //Validate file type (check the file extension)
+                    if (Path.GetExtension(file.FileName).ToLower() != ".csv")
+                    {
+                        ModelState.AddModelError("", "Please upload a valid CSV file");
+                        return View("CSVImport");
+                    }
+
+
                     using (var stream = file.OpenReadStream())
                     {
                       _csvService.ImportOrdersFromCSV(stream);
                         TempData["SuccessMessage"] = "CSV Import was successful.";
+                        return RedirectToAction("Index", "Orders");
                     }
                 }
                 catch (Exception ex) 

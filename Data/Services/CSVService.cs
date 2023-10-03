@@ -1,5 +1,6 @@
 ﻿using CsvHelper;
 using CsvHelper.Configuration;
+using OrderEase.Data.Enums;
 using OrderEase.Models;
 using System.Globalization;
 
@@ -27,32 +28,35 @@ namespace OrderEase.Data.Services
                 HasHeaderRecord = true,
                 IgnoreBlankLines = true,
                 Delimiter = ",",
+                HeaderValidated = null,
             };
+
 
             //Create a CsvReader with the custom mapping class
             using (var reader = new StreamReader(csvStream))
             using (var csv = new CsvReader(reader, config))
             {
                 csv.Context.RegisterClassMap<OrderCSVMap>(); //Register the mapping class 
+                csv.Context.TypeConverterCache.AddConverter<OrderStatus>(new OrderStatusConverter()); //Register custom type converter
 
-                //Read and map the CSV records to the existing Order model
+
+
+                //Read and map the CSV records to the Order model
                 var orders = csv.GetRecords<Order>().ToList();
 
-                //Save the orders to the database
-                foreach(var order in orders)
+                _context.Orders.AddRange(orders);
+
+                try
                 {
-                    try
-                    {
-                        _context.Orders.Add(order);
-                        _context.SaveChanges();
-                    }
-                    catch (Exception ex)
-                    {
-                        _logger.LogError(ex, "Error saving order to the database.");
-                    }
+                    _context.SaveChanges();
                 }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error saving order to the database.");
+                }
+
             }
-        
+
         }
 
         public IEnumerable<T> ReadCSV<T>(Stream file)

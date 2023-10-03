@@ -28,7 +28,7 @@ namespace OrderEase.Models
         [Display(Name = "Order Status")]
         public OrderStatus OrderStatus { get; set; } 
 
-        public ICollection<Item> Items { get; set; }
+        public virtual ICollection<Item> Items { get; set; }
         
     }
 }

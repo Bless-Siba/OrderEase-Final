@@ -11,6 +11,12 @@
     <h4>Item</h4>
     <hr />
     <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ItemID)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ItemID)
+        </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.ItemName)
         </dt>
@@ -38,6 +44,6 @@
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.ItemID">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Edit" asp-route-id="@Model?.ItemID" class="btn btn-primary">Edit</a> |
+    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
 </div>

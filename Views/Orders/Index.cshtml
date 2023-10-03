@@ -1,4 +1,5 @@
-﻿@model IEnumerable<OrderEase.Models.Order>
+﻿@using Newtonsoft.Json;
+@model IEnumerable<OrderEase.Models.Order>
 
 @{
     ViewData["Title"] = "Orders";
@@ -8,7 +9,7 @@
 <div class="container">
     <h1>Orders</h1>
 
-    <form asp-action="Index" method="post">
+    <form asp-action="FilterOrders" method="post">
         <div class="form-horizontal">
             <div class="row">
                 <div class="col-md-3">
@@ -16,7 +17,7 @@
                         <label class="control-label">Filter By:</label>
                         @Html.DropDownList("filterBy", new SelectList(new List<string>
                         {
-                        "OrderID", "Order Date", "Delivery Date", "Supplier"
+                        "OrderID", "Order Date", "Delivery Date", "Supplier", "Order Status"
                         }), "Select Filter", new { @class = "form-control" })
                     </div>
                 </div>
@@ -26,12 +27,10 @@
                         <input type="text" id="filterText" name="filterText" class="form-control" placeholder="Enter filter text">
                     </div>
                 </div>
-                <div class="col-md-3">
                     <div class="form-group">
                         <button type="submit" class="btn btn-primary btn-block">Filter</button>
                         <button type="button" class="btn btn-secondary btn-block" id="clearFilter">Clear</button>
                     </div>
-                </div>
             </div>
         </div>
     </form>
@@ -101,3 +100,5 @@
 <p>
     <a asp-action="Create" class="btn btn-success">Create New</a>
 </p>
+
+
