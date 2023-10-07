@@ -23,6 +23,7 @@ namespace OrderEase.Models
         //One-to-Many Relationship with Order
         [Display(Name ="Order ID")]
         public int OrderID { get; set; } //Foreign Key referecing Order
+
         public Order Order { get; set; }
     }
 }

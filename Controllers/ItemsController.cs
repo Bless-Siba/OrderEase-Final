@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 using OrderEase.Data;
 using OrderEase.Data.Services;
@@ -40,7 +41,7 @@ namespace OrderEase.Controllers
 
             var item = _itemsService.GetItemByID(id.Value);
 
-            if(item == null)
+            if (item == null)
             {
                 return NotFound();
             }
@@ -55,7 +56,7 @@ namespace OrderEase.Controllers
             {
                 item.OrderID,
             }).ToList();
-            ViewBag.OrderIDList = new SelectList(orderIDs, "OrderID");
+            ViewBag.OrderIDList = new SelectList(orderIDs, "OrderID", "OrderID");
             return View();
         }
 
@@ -64,6 +65,9 @@ namespace OrderEase.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Create([Bind("ItemName,Price,QuantityInStock,OrderID")] Item item)
         {
+            // Remove validation for the "Order" property
+            ModelState.Remove("Order");
+
             if (ModelState.IsValid)
             {
                 _itemsService.CreateItem(item);
@@ -78,7 +82,7 @@ namespace OrderEase.Controllers
 
             if (orderIDs.Any())
             {
-                ViewBag.OrderIDList = new SelectList(orderIDs, "OrderID", "Order", item.OrderID);
+                ViewBag.OrderIDList = new SelectList(orderIDs, "OrderID", "OrderID", item.OrderID);
             }
             else
             {
@@ -109,18 +113,20 @@ namespace OrderEase.Controllers
             };
 
             return View(item);
-            
+
         }
 
         // POST: Items/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int? id, [Bind("ItemID,ItemName,Price,QuantityInStock,OrderID")] Item item)
+        public IActionResult Edit(int? id, [Bind("ItemID,ItemName,Price,QuantityInStock,OrderID, Order")] Item item)
         {
             if (id != item.ItemID)
             {
                 return NotFound();
             }
+
+            ModelState.Remove("Order");
 
             if (ModelState.IsValid)
             {
@@ -170,13 +176,13 @@ namespace OrderEase.Controllers
             {
                 return Problem("Entity set 'OrderDbContext.Items'  is null.");
             }
-           _itemsService.DeleteItem(id);
+            _itemsService.DeleteItem(id);
             return RedirectToAction(nameof(Index));
         }
 
         private bool ItemExists(int id)
         {
-          return (_itemsService.ItemExists(id));
+            return (_itemsService.ItemExists(id));
         }
     }
 }

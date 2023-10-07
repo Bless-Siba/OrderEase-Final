@@ -1,9 +1,12 @@
-﻿using iText.IO.Font.Constants;
+﻿using iText.Bouncycastle.Asn1.X509;
+using iText.IO.Font.Constants;
 using iText.Kernel.Font;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
+using iText.Kernel.Pdf.Canvas.Parser.Listener;
 using iText.Layout.Element;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using OrderEase.Data.Services;
@@ -97,6 +100,8 @@ namespace OrderEase.Controllers
                 return NotFound();
             }
 
+            ModelState.Remove("Items");
+
             if (ModelState.IsValid)
             {
                 try
@@ -155,44 +160,46 @@ namespace OrderEase.Controllers
             return (_ordersService.OrderExists(id));
         }
 
-        //POST: Orders/Filter/5
+        //GET: Orders/Filter/5
         //Using LINQ to filter Orders
-        [HttpPost]
-        public IActionResult FilterOrders(int OrderID, DateTime? startDate, DateTime? endDate, string Supplier)
+        [HttpGet]
+        public IActionResult FilterOrders(string filterBy, string filterText)
         {
             var filteredOrders = _ordersService.GetAllOrders();
 
-            if (OrderID != 0)
+            switch (filterBy)
             {
-                filteredOrders = filteredOrders.Where(o => o.OrderID == OrderID);
+                case "OrderID":
+                    if (int.TryParse(filterText, out int OrderID))
+                    {
+                        filteredOrders = filteredOrders.Where(o => o.OrderID == OrderID);
+                    }
+                    break;
+                case "Order Date":
+                    if (DateTime.TryParse(filterText, out DateTime orderDate))
+                    {
+                        filteredOrders = filteredOrders.Where(o => o.OrderDate == orderDate);
+                    }
+                    break;
+                case "Delivery Date":
+                    if (DateTime.TryParse(filterText, out DateTime deliveryDate))
+                    {
+                        filteredOrders = filteredOrders.Where(o => o.DeliveryDate == deliveryDate);
+                    }
+                    break;
+                case "Supplier":
+                    if (!string.IsNullOrWhiteSpace(filterText))
+                    {
+                        filteredOrders = filteredOrders.Where(o => o.Supplier == filterText);
+                    }
+                    break;
             }
 
-            if (startDate.HasValue)
-            {
-                filteredOrders = filteredOrders.Where(o => o.OrderDate >= startDate.Value);
-            }
+            var filteredOrderIDList = filteredOrders.ToList();
 
-            if (endDate.HasValue)
-            {
-                filteredOrders = filteredOrders.Where(o => o.OrderDate <= endDate.Value);
-            }
-
-            if (!string.IsNullOrWhiteSpace(Supplier))
-            {
-                filteredOrders = filteredOrders.Where((o) => o.Supplier == Supplier);
-            }
-
-            var filteredOrderList = filteredOrders.ToList();
-
-            return View("Index", filteredOrderList);
-
+            return View("Index", filteredOrderIDList);
         }
 
-        public IActionResult ClearFilter()
-        {
-            TempData.Remove("FilteredOrders");
-            return RedirectToAction(nameof(Index));
-        }
 
         //GET: Orders/ExportPDF/5
         public IActionResult GeneratePdf(int OrderID)

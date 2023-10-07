@@ -32,7 +32,7 @@
             <div class="form-group">
                 @Html.LabelFor(model => model.OrderID, "Select Order", htmlAttributes: new { @class = "control-label"})
 
-                @if (ViewBag.OrderIDList != null && Enumerable.Count(ViewBag.OrderIDList) > 0)
+                @if ((IEnumerable<SelectListItem>)ViewBag.OrderIDList != null && ((IEnumerable<SelectListItem>)ViewBag.OrderIDList).Count() > 0)
                 {
                     @Html.DropDownListFor(model => model.OrderID, ViewBag.OrderIDList as SelectList, "-- Select an Order --", htmlAttributes: new { @class = "form-control" })
                 }
