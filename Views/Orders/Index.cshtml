@@ -9,26 +9,48 @@
     <h1>Orders</h1>
 
     <form asp-action="FilterOrders" method="get">
-        <div class="form-horizontal">
-            <div class="row">
-                <div class="form-group col-md-4">
-                    <label class="control-label">Filter By:</label>
-                    @Html.DropDownList("filterBy", new SelectList(new List<string>
-                    {
+    <div class="form-horizontal">
+        <div class="row">
+            <div class="form-group col-md-4">
+                <label class="control-label">Filter By:</label>
+                @Html.DropDownList("filterBy", new SelectList(new List<string>
+                {
                     "OrderID", "Order Date", "Delivery Date", "Supplier"
-                    }), "Select Filter", new { @class = "form-control" })
-                </div>
-                <div class="form-group col-md-4">
-                    <label class="control-label">Filter Text:</label>
-                    <input type="text" id="filterText" name="filterText" class="form-control" placeholder="Enter filter text">
-                </div>
-                <div class="form-group col-md-4 align-self-end">
-                    <input type="submit" value="Filter" class="btn btn-outline-primary" />
-                    <a asp-action="Index" class="btn btn-outline-dark">Clear</a>
-                </div>
+                }), "Select Filter", new { @class = "form-control", id = "filterByDropdown" })
+            </div>
+            <div class="form-group col-md-4">
+                <label class="control-label">Filter Text:</label>
+                <input type="text" id="filterText" name="filterText" class="form-control" placeholder="Enter filter text">
+            </div>
+            <div class="form-group col-md-4" id="dateRangeFilter" style="display: none;">
+                <label class="control-label">Date Range:</label>
+                <input type="date" id="startDate" name="startDate" class="form-control" placeholder="Start Date">
+                <input type="date" id="endDate" name="endDate" class="form-control" placeholder="End Date">
+            </div>
+            <div class="form-group col-md-4 align-self-end">
+                <input type="submit" value="Filter" class="btn btn-outline-primary" />
+                <a asp-action="Index" class="btn btn-outline-dark">Clear</a>
             </div>
         </div>
-    </form>
+    </div>
+</form>
+
+<script>
+    // Add an event listener to the filterByDropdown
+    document.getElementById('filterByDropdown').addEventListener('change', function () {
+        var selectedValue = this.value;
+        var dateRangeFilter = document.getElementById('dateRangeFilter');
+
+        // Check if "Order Date" or "Delivery Date" is selected
+        if (selectedValue === "Order Date" || selectedValue === "Delivery Date") {
+            dateRangeFilter.style.display = 'block'; // Show the date range inputs
+        } else {
+            dateRangeFilter.style.display = 'none';  // Hide the date range inputs
+        }
+    });
+</script>
+
+
 
     <table class="table table-striped table-bordered">
         <thead>

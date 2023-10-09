@@ -163,7 +163,7 @@ namespace OrderEase.Controllers
         //GET: Orders/Filter/5
         //Using LINQ to filter Orders
         [HttpGet]
-        public IActionResult FilterOrders(string filterBy, string filterText)
+        public IActionResult FilterOrders(string filterBy, string filterText, DateTime? startDate, DateTime? endDate)
         {
             var filteredOrders = _ordersService.GetAllOrders();
 
@@ -176,15 +176,19 @@ namespace OrderEase.Controllers
                     }
                     break;
                 case "Order Date":
-                    if (DateTime.TryParse(filterText, out DateTime orderDate))
+                    if (startDate.HasValue && endDate.HasValue)
                     {
-                        filteredOrders = filteredOrders.Where(o => o.OrderDate == orderDate);
+                        // Filter orders within the date range
+                        filteredOrders = filteredOrders
+                            .Where(o => o.OrderDate >= startDate.Value && o.OrderDate <= endDate.Value);
                     }
                     break;
                 case "Delivery Date":
-                    if (DateTime.TryParse(filterText, out DateTime deliveryDate))
+                    if (startDate.HasValue && endDate.HasValue)
                     {
-                        filteredOrders = filteredOrders.Where(o => o.DeliveryDate == deliveryDate);
+                        // Filter orders within the date range
+                        filteredOrders = filteredOrders
+                            .Where(o => o.DeliveryDate >= startDate.Value && o.DeliveryDate <= endDate.Value);
                     }
                     break;
                 case "Supplier":
@@ -195,10 +199,11 @@ namespace OrderEase.Controllers
                     break;
             }
 
-            var filteredOrderIDList = filteredOrders.ToList();
+            var filteredOrderList = filteredOrders.ToList();
 
-            return View("Index", filteredOrderIDList);
+            return View("Index", filteredOrderList);
         }
+
 
 
         //GET: Orders/ExportPDF/5
