@@ -16,21 +16,4 @@ OrderEase is a versatile solution designed to streamline the order management pr
 ### 3. Reporting
 - **Generate PDF Reports**: Create printable PDF reports containing order details, making it convenient to share order information with others or for record-keeping purposes.
 
-## Getting Started
-
-1. Clone the repository to your local machine.
-   ```
-   git clone https://github.com/your-username/OrderEase-Final.git
-   ```
-
-3. Install any necessary dependencies.
-   ```
-   npm install
-   ```
-
-4. Launch the application.
-   ```
-   npm start
-   ```
-
 5. Access the OrderEase web application in your browser at `[http://localhost:3000](https://localhost:7062/)`.
